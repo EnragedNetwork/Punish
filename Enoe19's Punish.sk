@@ -1,0 +1,72 @@
+on chat:
+	if {choosepunish.%player%} is true:
+		if {choosetype.%player%} is true:
+			set {punishtype.%player%} to "%message%"
+			set {choosetype.%player%} to false
+			set {chooseduration.%player%} to true
+			cancel event
+			send "For how long do you want to punish %{punishplayer.%player%}%? (Supported durations: Xs, Xm, Xh, Xd, Xw, Xmo, Xy)"
+		else if {chooseduration.%player%} is true:
+			set {punishduration.%player%} to "%message%"
+			set {chooseduration.%player%} to false
+			set {choosereason.%player%} to true
+			cancel event
+			send "Why do you want to punish %{punishplayer.%player%}%?"
+		else if {choosereason.%player%} is true:
+			set {punishreason.%player%} to "%message%"
+			set {choosereason.%player%} to false
+			set {punishdone.%player%} to true
+			cancel event
+			
+	
+	
+	
+
+	
+	if {punishdone.%player%} is true:
+		if {punishtype.%player%} is "warn":
+			make player execute command "/warn %{punishplayer.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "mute":
+			make player execute command "/mute %{punishplayer.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "ban":
+			make player execute command "/ban %{punishplayer.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "ipban":
+			make player execute command "/banip %{punishplayer.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "blacklist":
+			make player execute command "/blacklist %{punishplayer.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "tempwarn":
+			make player execute command "/tempwarn %{punishplayer.%player%}% %{punishduration.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "tempmute":
+			make player execute command "/tempmute %{punishplayer.%player%}% %{punishduration.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "tempban":
+			make player execute command "/tempban %{punishplayer.%player%}% %{punishduration.%player%}% %{punishreason.%player%}%"
+		else if {punishtype.%player%} is "tempipban":
+			make player execute command "/tempipban %{punishplayer.%player%}% %{punishduration.%player%}% %{punishreason.%player%}%"
+
+		else:
+			send "Supported punishments: warn, mute, ban, ipban, blacklist, tempwarn, tempmute, tempban, tempipban" to player
+
+
+
+		send "Punishment: %{punishtype.%player%}%. Player: %{punishplayer.%player%}%. Duration: %{punishduration.%player%}%. Reason: %{punishreason.%player%}%."
+
+		send "---------------------------------------------"
+
+
+command /.punish <offlineplayer>:
+	description: Punish people
+	usage: /.punish [player]
+	permission: op
+	permission message: You don't have the permission to use this command!
+	executable by: players and console
+	trigger:
+		set {punishplayer.%player%} to "%arg-1%"
+		set {punishdone.%player%} to false
+		set {choosepunish.%player%} to true
+		set {choosetype.%player%} to true
+		set {chooseduration.%player%} to false
+		set {choosereason.%player%} to false
+
+		send "-----------Enoe19's Punish System 2.5-----------"
+		send "Punishing %{punishplayer.%player%}%"
+		send "How do you want to punish %{punishplayer.%player%}%? (Supported punishments: warn, mute, ban, ipban, blacklist, tempwarn, tempmute, tempban, tempipban)"
